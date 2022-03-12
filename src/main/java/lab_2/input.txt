@@ -1,0 +1,9 @@
+F={q3}
+Q={q0,q1,q2,q3};
+A={a,b,c};
+sigma(q0,a)=q0;
+sigma(q1,b)=q2;
+sigma(q0,a)=q1;
+sigma(q2,a)=q2;
+sigma(q2,b)=q3;
+sigma(q2,c)=q0.
