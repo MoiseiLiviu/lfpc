@@ -1,0 +1,25 @@
+
+~
+java:S1157^"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(ê¢“Ğÿÿÿÿÿ
+k	java:S117#"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ùäÈ„üÿÿÿÿ
+f	java:S117("QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÓÑ¼Æ
+k	java:S117D"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÀàĞ¬úÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ÑÈ…¨ıÿÿÿÿ
+r	java:S116"XRename this field "non_terminals" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„·ëàüÿÿÿÿ
+u	java:S116"[Rename this field "contains_epsilon" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(üóÒÃşÿÿÿÿ
+h	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ĞŠ’ìşÿÿÿÿ
+m
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(ĞŠ’ìşÿÿÿÿ
+c	java:S100:"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ğ‡ä¹
+h	java:S100?"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(àÊ¢±şÿÿÿÿ
+h	java:S100D"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÀàĞ¬úÿÿÿÿ
+c	java:S100H"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÁÚ‡Å
+m
+java:S3776Q"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(å¼”üÿÿÿÿ
+6
+java:S2129_" Remove this "String" constructor(Ø®Ä
+6
+java:S2129e" Remove this "String" constructor(Ø®Ä
+T	java:S106ƒ"9Replace this use of System.out or System.err by a logger.(È—±şÿÿÿÿ
+T	java:S106…"9Replace this use of System.out or System.err by a logger.(µ¦ú®şÿÿÿÿ
+T	java:S106‡"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
