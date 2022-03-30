@@ -1,5 +1,6 @@
-package lab_4;
+package lab_4.steps;
 
+import lab_4.CFG;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

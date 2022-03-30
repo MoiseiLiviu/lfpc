@@ -1,19 +1,19 @@
-package lab_4;
+package lab_4.steps;
+
+import lab_4.CFG;
 
 import java.util.*;
 
 public class Step3 {
     public static void removeNonProductive(CFG cfg){
+
         HashMap<String, List<String>> productionRules = cfg.getProductionRules();
         List<String> productive = new ArrayList<>();
-
-        //iterate over ProductionRules
         for (Map.Entry<String, List<String>> entry : productionRules.entrySet()) {
             if(!productive.contains(entry.getKey())) {
                 checkProductive(cfg, productive, new ArrayList<>(), entry.getKey());
             }
         }
-
         Iterator<String> iterator = cfg.getNonTerminalSet().iterator();
         while (iterator.hasNext()) {
             String symbol = iterator.next();

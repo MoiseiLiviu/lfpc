@@ -1,5 +1,6 @@
-package lab_4;
+package lab_4.steps;
 
+import lab_4.CFG;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,13 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Step5 {
 
-    private static HashMap<String, String> substitutionMap;
-    private static char substitutionCharacter;
+    private static final HashMap<String, String> substitutionMap = new HashMap<>();;
+    private static char substitutionCharacter = 'F';
 
     public static void chomskyNormalization(CFG cfg) {
-
-        substitutionMap = new HashMap<>();
-        substitutionCharacter = 'F';
 
         ConcurrentHashMap<String, List<String>> productionRules = new ConcurrentHashMap<>(cfg.getProductionRules());
         for (Map.Entry<String, List<String>> entry : productionRules.entrySet()) {
