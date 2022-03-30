@@ -37,7 +37,7 @@ public class Step5 {
                 if (!cfg.isNonTerminal(c)) {
                     substituteOneTerminalWithNewSymbol(c, cfg, stringBuilder, i);
                 } else if (i + 1 < stringBuilder.length()) {
-                    String d = String.valueOf(stringBuilder.charAt(i));
+                    String d = String.valueOf(stringBuilder.charAt(i+1));
                     if (cfg.isNonTerminal(d)) {
                         i++;
                         substituteTwoNonTerminalsWithNewSymbol(c, d, cfg, stringBuilder, i);
