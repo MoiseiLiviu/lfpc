@@ -97,6 +97,10 @@ public class CFG {
         return nonTerminalSet.contains(checkSymbol);
     }
 
+    public boolean isTerminal(String checkSymbol) {
+        return terminalSet.contains(checkSymbol);
+    }
+
     public boolean isNonTerminal(char c){
         return isNonTerminal(String.valueOf(c));
     }
