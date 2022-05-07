@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         Grammar grammar = new Grammar(inputPath);
-        String input = "<ab-a*ab*->";
+        String input = "<abcefedg>";
         System.out.println(new PrecedenceParser(grammar).parseInput(input));
     }
 }

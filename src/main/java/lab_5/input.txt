@@ -1,12 +1,11 @@
 G=(Vn, Vt, P, S)
-Vn={S, D, A, Z}
-Vt={a, b, *, -}
+Vn={S, A, B, C, D}
+Vt={a, b, c, d, e, f, g, e}
 P={
-1. S->D
-2. A->DZ
-3. D->b
-4. Z->-
-5. D->DA
-6. D->a
-7. Z->*
+1. S->Ag
+2. A->abcB
+3. B->Cd
+4. C->e
+5. C->CfD
+6. D->e
 }

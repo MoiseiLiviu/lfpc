@@ -19,19 +19,6 @@ public class Grammar {
         init(filePath);
     }
 
-    public void removeSymbol(String symbol) {
-
-        Iterator<Map.Entry<String, List<String>>> it = productionRules.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, List<String>> entry = it.next();
-            if (entry.getKey().equals(symbol)) {
-                it.remove();
-                continue;
-            }
-            entry.getValue().removeIf(derivation -> derivation.contains(symbol));
-        }
-    }
-
     public void init(String pathName) throws IOException {
 
         try (BufferedReader br = new BufferedReader(new FileReader(pathName))) {
@@ -87,22 +74,12 @@ public class Grammar {
         }
     }
 
-    public void addSubstitutionRule(String symbol, String derivation){
-
-        nonTerminalSet.add(symbol);
-        productionRules.putIfAbsent(symbol, Collections.singletonList(derivation));
-    }
-
     public boolean isNonTerminal(String checkSymbol) {
         return nonTerminalSet.contains(checkSymbol);
     }
 
     public boolean isTerminal(String checkSymbol) {
         return terminalSet.contains(checkSymbol);
-    }
-
-    public boolean isNonTerminal(char c){
-        return isNonTerminal(String.valueOf(c));
     }
 
     @Override

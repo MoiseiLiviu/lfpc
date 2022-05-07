@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 public class PrecedenceParser {
 
-    private Grammar grammar;
-    private Map<String, List<String>> firstMap = new HashMap<>();
-    private Map<String, List<String>> lastMap = new HashMap<>();
-    private Map<String, HashMap<String, String>> precedenceMap = new HashMap<>();
+    private final Grammar grammar;
+    private final Map<String, List<String>> firstMap = new HashMap<>();
+    private final Map<String, List<String>> lastMap = new HashMap<>();
+    private final Map<String, HashMap<String, String>> precedenceMap = new HashMap<>();
 
     private static final String EQUAL = "=";
     private static final String LESS = "<";
@@ -50,7 +50,7 @@ public class PrecedenceParser {
             if (grammar.isNonTerminal(firstSymbol) && !firsts.contains(firstSymbol)) {
                 firsts.add(firstSymbol);
                 getFirstSymbols(firstSymbol, firsts);
-            } else if(!firsts.contains(firstSymbol)){
+            } else if (!firsts.contains(firstSymbol)) {
                 firsts.add(firstSymbol);
             }
         }
@@ -63,7 +63,7 @@ public class PrecedenceParser {
             if (grammar.isNonTerminal(lastSymbol) && !lasts.contains(lastSymbol)) {
                 lasts.add(lastSymbol);
                 getLastSymbols(lastSymbol, lasts);
-            } else if(!lasts.contains(lastSymbol)){
+            } else if (!lasts.contains(lastSymbol)) {
                 lasts.add(lastSymbol);
             }
         }
@@ -85,7 +85,8 @@ public class PrecedenceParser {
                     }
                     if (grammar.isTerminal(c2) && grammar.isNonTerminal(c1)) {
                         for (String last : lastMap.get(c1)) {
-                            precedenceMap.get(c1).put(last, GREATER);
+                            precedenceMap.putIfAbsent(last, new HashMap<>());
+                            precedenceMap.get(last).put(c2, GREATER);
                         }
                     }
                     if (grammar.isNonTerminal(c1) && grammar.isNonTerminal(c2)) {
@@ -109,22 +110,23 @@ public class PrecedenceParser {
         for (int i = 1; i < sb.length() - 2; i += 2) {
             String c1 = sb.substring(i, i + 1);
             String c2 = sb.substring(i + 1, i + 2);
-            sb.insert(i+1, precedenceMap.get(c1).get(c2));
+            sb.insert(i + 1, precedenceMap.get(c1).get(c2));
         }
 
+        System.out.println("Input with precedence operators: " + sb.toString());
         return sb.toString();
     }
 
-    private String findProductionRuleByDerivation(String value) {
+    private List<String> findProductionRuleByDerivation(String value) {
 
+        List<String> arr = new ArrayList<>();
         for (Map.Entry<String, List<String>> rule : grammar.getProductionRules().entrySet()) {
             for (String derivation : rule.getValue()) {
                 if (derivation.equals(value))
-                    return rule.getKey();
+                    arr.add(rule.getKey());
             }
         }
-
-        throw new RuntimeException("No rule was found for derivation : " + value);
+        return arr;
     }
 
     public boolean parseInput(String input) {
@@ -134,51 +136,111 @@ public class PrecedenceParser {
 
     private boolean checkString(String str) {
 
+        System.out.println(str);
         if (str.equals("<S>")) return true;
 
-        StringBuilder sb = new StringBuilder(str);
-        int equalIndex = str.indexOf("=");
-        if (equalIndex != -1) {
-            String left = str.substring(equalIndex - 1, equalIndex);
-            String right = str.substring(equalIndex + 1, equalIndex + 2);
-            String symbolOfTheProduction = findProductionRuleByDerivation(left + right);
-            sb.replace(equalIndex-1, equalIndex + 2, symbolOfTheProduction);
-
-            equalIndex-=2;
-            if(equalIndex>1){
-                sb.replace(equalIndex,equalIndex+1,precedenceMap.get(sb.substring(equalIndex-1,equalIndex)).get(symbolOfTheProduction));
+        try {
+            List<String> list = new ArrayList<>();
+            substituteSymbols(str, list);
+            boolean shouldContinue = false;
+            for (String s : list) {
+                List<String> list1 = new ArrayList<>();
+                shouldContinue = shouldContinue || substituteEquals(s, list1);
+                if (shouldContinue) {
+                    for (String s1 : list1) {
+                        if (checkString(s1)) return true;
+                    }
+                }
             }
-            if(equalIndex<sb.length()-3){
-                sb.replace(equalIndex+2,equalIndex+3,precedenceMap.get(symbolOfTheProduction).get(sb.substring(equalIndex+3,equalIndex+4)));
-            }
-            return checkString(sb.toString());
-        }
-
-        Pattern pattern = Pattern.compile("<.>");
-        Matcher matcher = pattern.matcher(str);
-        if (matcher.find()) {
-            int index = matcher.start();
-            String symbolOfTheProduction = findProductionRuleByDerivation(sb.substring(index+1,index+2));
-            sb.replace(index+1, index + 2, symbolOfTheProduction);
-            if(index>1){
-                sb.replace(index,index+1,precedenceMap.get(sb.substring(index-1,index)).get(symbolOfTheProduction));
-            }
-            if(index<sb.length()-3){
-                sb.replace(index+2,index+3,precedenceMap.get(symbolOfTheProduction).get(sb.substring(index+3,index+4)));
-            }
-            return checkString(sb.toString());
+        } catch (Exception e) {
+            return false;
         }
 
         return false;
     }
 
-    public static void main(String[] args) {
+    private void substituteSymbols(String input, List<String> toBeProcessed) {
 
-        String str = "aaaa<b>";
-        Pattern pattern = Pattern.compile("<[a-zA-Z]>");
-        Matcher matcher = pattern.matcher(str);
+        StringBuilder sb = new StringBuilder(input);
+
+        Pattern pattern = Pattern.compile("<.>");
+        Matcher matcher = pattern.matcher(input);
         if (matcher.find()) {
             int index = matcher.start();
+            List<String> symbolsOfTheProduction = findProductionRuleByDerivation(sb.substring(index + 1, index + 2));
+            for (String symbolOfTheProduction : symbolsOfTheProduction) {
+                try {
+                    StringBuilder sb1 = new StringBuilder(sb.toString());
+                    sb1.replace(index + 1, index + 2, symbolOfTheProduction);
+                    if (index > 1) {
+                        sb1.replace(index, index + 1, precedenceMap.get(sb1.substring(index - 1, index)).get(symbolOfTheProduction));
+                    }
+                    if (index < sb1.length() - 3) {
+                        sb1.replace(index + 2, index + 3, precedenceMap.get(symbolOfTheProduction).get(sb1.substring(index + 3, index + 4)));
+                    }
+                    substituteSymbols(sb1.toString(), toBeProcessed);
+                } catch (Exception e) {
+                    //ignored
+                }
+            }
+        } else {
+            toBeProcessed.add(input);
+        }
+    }
+
+    private boolean substituteEquals(String str, List<String> l) {
+
+        try {
+            StringBuilder sb = new StringBuilder(str);
+            int d = 0;
+            while (true) {
+                int equalIndex = str.substring(d).indexOf("=") + d;
+                int offset = equalIndex+2;
+                StringBuilder toBeReplaced = new StringBuilder();
+                if (equalIndex != -1) {
+                    d = equalIndex + 1;
+                    toBeReplaced.append(str,equalIndex+1,equalIndex+2);
+                    while (str.substring(offset).indexOf("=") == 0) {
+                        toBeReplaced.append(str, offset + 1, offset + 2);
+                        offset += 2;
+                    }
+                    String left = str.substring(equalIndex - 1, equalIndex);
+                    List<String> symbolsOfTheProduction;
+                    if (toBeReplaced.toString().isEmpty()) {
+                        d = offset -1;
+                        String right = str.substring(equalIndex + 1, equalIndex + 2);
+                        symbolsOfTheProduction = findProductionRuleByDerivation(left + right);
+                    } else {
+                        symbolsOfTheProduction = findProductionRuleByDerivation(left + toBeReplaced);
+                    }
+
+                    if (symbolsOfTheProduction.isEmpty()) {
+                        continue;
+                    }
+                    for (String symbolOfTheProduction : symbolsOfTheProduction) {
+                        try {
+                            StringBuilder sb1 = new StringBuilder(sb.toString());
+                            sb1.replace(equalIndex - 1, offset , symbolOfTheProduction);
+                            equalIndex -= 2;
+                            if (equalIndex > 1) {
+                                sb1.replace(equalIndex, equalIndex + 1, precedenceMap.get(sb1.substring(equalIndex - 1, equalIndex)).get(symbolOfTheProduction));
+                            }
+                            if (equalIndex < sb1.length() - 3) {
+                                sb1.replace(equalIndex + 2, equalIndex + 3, precedenceMap.get(symbolOfTheProduction).get(sb1.substring(equalIndex + 3, equalIndex + 4)));
+                            }
+                            substituteEquals(sb1.toString(), l);
+                        } catch (Exception e) {
+                            //ignored
+                        }
+                    }
+                    return true;
+                } else {
+                    l.add(str);
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            return false;
         }
     }
 }
