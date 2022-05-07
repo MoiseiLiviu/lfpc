@@ -130,8 +130,12 @@ public class PrecedenceParser {
     }
 
     public boolean parseInput(String input) {
-        String inputWithPrecedenceOperators = getInputWithPrecedenceOperators(input);
-        return checkString(inputWithPrecedenceOperators);
+        try {
+            String inputWithPrecedenceOperators = getInputWithPrecedenceOperators(input);
+            return checkString(inputWithPrecedenceOperators);
+        }catch (Exception e){
+            return false;
+        }
     }
 
     private boolean checkString(String str) {
